@@ -6,6 +6,7 @@ import java.time.Instant;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.charlesedu.workshopmongo.dto.AuthorDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Document
@@ -20,12 +21,12 @@ public class Post implements Serializable {
 
     private String title;
     private String body;
-    private User author;
+    private AuthorDTO author;
 
     public Post() {
     }
 
-    public Post(String id, Instant moment, String title, String body, User author) {
+    public Post(String id, Instant moment, String title, String body, AuthorDTO author) {
         this.id = id;
         this.moment = moment;
         this.title = title;
@@ -65,11 +66,11 @@ public class Post implements Serializable {
         this.body = body;
     }
 
-    public User getAuthor() {
+    public AuthorDTO getAuthor() {
         return author;
     }
 
-    public void setAuthor(User author) {
+    public void setAuthor(AuthorDTO author) {
         this.author = author;
     }
 
