@@ -47,6 +47,25 @@ public class UserService {
         }
     }
 
+    public User update(User obj) {
+        try {
+            Optional<User> entity = repository.findById(obj.getId());
+
+            User newObj = entity.get();
+    
+            updateData(newObj, obj);
+    
+            return repository.save(newObj);
+        } catch (ObjectNotFoundException e) {
+            throw new ObjectNotFoundException(obj.getId());
+        }
+    }
+
+    private void updateData(User entity, User obj) {
+        entity.setName(obj.getName());
+        entity.setEmail(obj.getEmail());
+    }
+
     public User fromDTO(UserDTO obj) {
         return new User(obj.getId(), obj.getName(), obj.getEmail());
     }
