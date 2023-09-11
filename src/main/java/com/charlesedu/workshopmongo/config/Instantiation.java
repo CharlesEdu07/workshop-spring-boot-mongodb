@@ -1,7 +1,9 @@
 package com.charlesedu.workshopmongo.config;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.util.Arrays;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -17,45 +19,48 @@ import com.charlesedu.workshopmongo.repositories.UserRepository;
 @Configuration
 public class Instantiation implements CommandLineRunner {
 
-    @Autowired
-    private UserRepository userRepository;
+        @Autowired
+        private UserRepository userRepository;
 
-    @Autowired
-    private PostRepository postRepository;
+        @Autowired
+        private PostRepository postRepository;
 
-    @Override
-    public void run(String... args) throws Exception {
-        userRepository.deleteAll();
-        postRepository.deleteAll();
+        @Override
+        public void run(String... args) throws Exception {
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                sdf.setTimeZone(TimeZone.getTimeZone("GMT"));
 
-        User user1 = new User(null, "Gato Felix", "gatofelix@gmail.com");
-        User user2 = new User(null, "Jaspion", "jaspion@gmail.com");
-        User user3 = new User(null, "Jiraiya", "jiraiya@gmail.com");
+                userRepository.deleteAll();
+                postRepository.deleteAll();
 
-        userRepository.saveAll(Arrays.asList(user1, user2, user3));
+                User user1 = new User(null, "Gato Felix", "gatofelix@gmail.com");
+                User user2 = new User(null, "Jaspion", "jaspion@gmail.com");
+                User user3 = new User(null, "Jiraiya", "jiraiya@gmail.com");
 
-        Post post1 = new Post(null, Instant.parse("2021-09-01T19:53:07Z"), "Partiu viagem",
-                "Vou viajar para São Paulo. Abraços!", new AuthorDTO(user1));
+                userRepository.saveAll(Arrays.asList(user1, user2, user3));
 
-        Post post2 = new Post(null, Instant.parse("2021-09-03T19:53:07Z"), "Bom dia", "Acordei feliz hoje!",
-                new AuthorDTO(user1));
+                Post post1 = new Post(null, sdf.parse("21/03/2018"), "Partiu viagem",
+                                "Vou viajar para São Paulo. Abraços!", new AuthorDTO(user1));
 
-        CommentDTO comment1 = new CommentDTO("Boa viagem mano!", Instant.parse("2021-09-01T19:53:07Z"),
-                new AuthorDTO(user2));
+                Post post2 = new Post(null, sdf.parse("23/03/2018"), "Bom dia", "Acordei feliz hoje!",
+                                new AuthorDTO(user1));
 
-        CommentDTO comment2 = new CommentDTO("Aproveite!", Instant.parse("2021-09-02T19:53:07Z"),
-                new AuthorDTO(user3));
+                CommentDTO comment1 = new CommentDTO("Boa viagem mano!", Instant.parse("2021-09-01T19:53:07Z"),
+                                new AuthorDTO(user2));
 
-        CommentDTO comment3 = new CommentDTO("Tenha um ótimo dia!", Instant.parse("2021-09-03T19:53:07Z"),
-                new AuthorDTO(user2));
+                CommentDTO comment2 = new CommentDTO("Aproveite!", Instant.parse("2021-09-02T19:53:07Z"),
+                                new AuthorDTO(user3));
 
-        post1.getComments().addAll(Arrays.asList(comment1, comment2));
-        post2.getComments().addAll(Arrays.asList(comment3));
+                CommentDTO comment3 = new CommentDTO("Tenha um ótimo dia!", Instant.parse("2021-09-03T19:53:07Z"),
+                                new AuthorDTO(user2));
 
-        postRepository.saveAll(Arrays.asList(post1, post2));
+                post1.getComments().addAll(Arrays.asList(comment1, comment2));
+                post2.getComments().addAll(Arrays.asList(comment3));
 
-        user1.getPosts().addAll(Arrays.asList(post1, post2));
-        userRepository.save(user1);
-    }
+                postRepository.saveAll(Arrays.asList(post1, post2));
+
+                user1.getPosts().addAll(Arrays.asList(post1, post2));
+                userRepository.save(user1);
+        }
 
 }
